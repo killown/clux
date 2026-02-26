@@ -1,0 +1,12 @@
+[keyboard]
+layout = "br"
+variant = "abnt2"
+options = "caps:escape"
+
+[keybindings.terminal]
+combo = "ctrl+shift+return"
+command = "alacritty"
+
+[keybindings.browser]
+combo = "logo+b"
+command = "firefox-developer-edition"
