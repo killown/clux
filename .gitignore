@@ -1,0 +1,22 @@
+# --- Rust/Cargo ---
+/target/
+Cargo.lock
+
+# --- Editor/OS ---
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# --- Compositor Specific ---
+# Log files from tracing/logging
+*.log
+# Wayland/X11 socket files if created in-tree
+wayland-0*
+.X11-unix/
+
+# --- Environment ---
+.env
+# If you use a custom script to launch supervil
+launch.sh

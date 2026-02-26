@@ -1,0 +1,23 @@
+[package]
+name = "clux"
+version = "0.1.0"
+edition = "2021"
+authors = ["Neo"]
+
+[dependencies]
+smithay = { git = "https://github.com/Smithay/smithay", default-features = false, features = [
+  "backend_gbm",
+  "backend_libinput",
+  "renderer_gl",
+  "desktop",
+  "wayland_frontend",
+  "backend_udev",
+  "backend_drm",
+  "backend_winit",
+  "backend_session",
+  "backend_session_libseat",
+] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+anyhow = "1.0"
+bitflags = "2.4"
