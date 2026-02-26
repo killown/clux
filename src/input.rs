@@ -1,4 +1,3 @@
-// src/input.rs
 use smithay::{
     backend::input::{
         AbsolutePositionEvent, Event, InputBackend, InputEvent, KeyState, KeyboardKeyEvent,
@@ -30,11 +29,60 @@ impl Clux {
                         let keysym = handle.modified_sym();
 
                         if event.state() == KeyState::Pressed {
+                            let mut keysym_name = format!("{:?}", keysym).to_lowercase();
+
+                            if keysym_name.starts_with("xk_") {
+                                keysym_name = keysym_name[3..].to_string();
+                            }
+
+                            // DEBUG: keys
+                            tracing::info!("Key: '{}' | Mods: {:?}", keysym_name, modifiers);
+
+                            // Emergency Exit
                             if (modifiers.ctrl && modifiers.alt && keysym == Keysym::BackSpace)
-                                || (modifiers.logo && keysym == Keysym::q)
                                 || keysym == Keysym::Escape
                             {
                                 state.loop_signal.stop();
+                            }
+
+                            for (name, binding) in &state.config.keybindings {
+                                let parts: Vec<&str> = binding.combo.split('+').collect();
+
+                                if let Some(key_part) = parts.last() {
+                                    let target_key = key_part.to_lowercase();
+
+                                    let is_key_match = keysym_name == target_key
+                                        || (target_key == "return"
+                                            && (keysym_name == "return"
+                                                || keysym_name == "kp_enter"));
+
+                                    if is_key_match {
+                                        let mut mods_match = true;
+
+                                        for &part in &parts[..parts.len() - 1] {
+                                            match part.to_lowercase().as_str() {
+                                                "ctrl" => mods_match &= modifiers.ctrl,
+                                                "alt" => mods_match &= modifiers.alt,
+                                                "shift" => mods_match &= modifiers.shift,
+                                                "logo" | "super" | "win" => {
+                                                    mods_match &= modifiers.logo
+                                                }
+                                                _ => {}
+                                            }
+                                        }
+
+                                        if mods_match {
+                                            if name == "quit" {
+                                                state.loop_signal.stop();
+                                            } else {
+                                                let _ = std::process::Command::new("sh")
+                                                    .arg("-c")
+                                                    .arg(&binding.command)
+                                                    .spawn();
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
 
@@ -69,7 +117,6 @@ impl Clux {
 
                 if event.state() == smithay::backend::input::ButtonState::Pressed {
                     let pos = pointer.current_location();
-                    // Fix E0502: Clone the window to break the immutable borrow on self.space
                     let window = self.space.element_under(pos).map(|(w, _)| w.clone());
 
                     if let Some(window) = window {

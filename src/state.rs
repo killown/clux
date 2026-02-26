@@ -37,6 +37,7 @@ pub struct Clux {
     pub seat_state: SeatState<Clux>,
     pub data_device_state: DataDeviceState,
     pub popups: PopupManager,
+    pub config: crate::config::CluxConfig,
 
     pub seat: Seat<Self>,
 }
@@ -62,7 +63,7 @@ impl Clux {
             XkbConfig {
                 layout: &clux_config.keyboard.layout,
                 variant: &clux_config.keyboard.variant,
-                options: clux_config.keyboard.options, // Pass the Option<String> directly
+                options: clux_config.keyboard.options.clone(),
                 ..Default::default()
             },
             200,
@@ -90,6 +91,7 @@ impl Clux {
             data_device_state,
             popups,
             seat,
+            config: clux_config,
         }
     }
 

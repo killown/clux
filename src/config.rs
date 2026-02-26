@@ -1,10 +1,12 @@
 use serde::Deserialize;
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
 #[derive(Deserialize, Default)]
 pub struct CluxConfig {
     pub keyboard: KeyboardConfig,
+    pub keybindings: HashMap<String, Keybinding>,
 }
 
 #[derive(Deserialize)]
@@ -12,6 +14,12 @@ pub struct KeyboardConfig {
     pub layout: String,
     pub variant: String,
     pub options: Option<String>,
+}
+
+#[derive(Deserialize)]
+pub struct Keybinding {
+    pub combo: String,
+    pub command: String,
 }
 
 impl Default for KeyboardConfig {
