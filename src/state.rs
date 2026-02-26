@@ -136,6 +136,18 @@ impl Clux {
                     .map(|(s, p)| (s, (p + location).to_f64()))
             })
     }
+
+    pub fn map_output(&mut self, output: &smithay::output::Output, location: Point<i32, Logical>) {
+        let pos = self
+            .config
+            .outputs
+            .iter()
+            .find(|c| c.name == output.name())
+            .map(|c| Point::from(c.pos))
+            .unwrap_or(location);
+
+        self.space.map_output(output, pos);
+    }
 }
 
 #[derive(Default)]

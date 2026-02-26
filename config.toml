@@ -10,3 +10,11 @@ command = "alacritty"
 [keybindings.browser]
 combo = "logo+b"
 command = "firefox-developer-edition"
+
+[[outputs]]
+name = "HDMI-A-1"
+pos = [0, 0]
+
+[[outputs]]
+name = "DP-1"
+pos = [1920, 0]

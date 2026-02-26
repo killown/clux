@@ -1,3 +1,4 @@
+// src/config.rs
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs;
@@ -7,6 +8,15 @@ use std::path::PathBuf;
 pub struct CluxConfig {
     pub keyboard: KeyboardConfig,
     pub keybindings: HashMap<String, Keybinding>,
+    #[serde(default)]
+    pub outputs: Vec<OutputConfig>,
+}
+
+#[derive(Deserialize)]
+pub struct OutputConfig {
+    pub name: String,
+    pub pos: (i32, i32),
+    pub scale: f32,
 }
 
 #[derive(Deserialize)]
@@ -40,7 +50,14 @@ pub fn load_config() -> CluxConfig {
     let config_path = config_dir.join("config.toml");
 
     if let Ok(content) = fs::read_to_string(config_path) {
-        toml::from_str(&content).unwrap_or_default()
+        // Log an error if parsing fails
+        match toml::from_str(&content) {
+            Ok(config) => config,
+            Err(e) => {
+                eprintln!("Config parsing error: {}", e);
+                CluxConfig::default()
+            }
+        }
     } else {
         CluxConfig::default()
     }
