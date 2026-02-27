@@ -9,6 +9,7 @@ smithay = { git = "https://github.com/Smithay/smithay", default-features = false
   "backend_gbm",
   "backend_libinput",
   "renderer_gl",
+  "renderer_multi",
   "desktop",
   "wayland_frontend",
   "backend_udev",

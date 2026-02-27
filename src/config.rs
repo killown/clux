@@ -1,4 +1,3 @@
-// src/config.rs
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs;
@@ -16,7 +15,12 @@ pub struct CluxConfig {
 pub struct OutputConfig {
     pub name: String,
     pub pos: (i32, i32),
+    #[serde(default = "default_scale")]
     pub scale: f32,
+}
+
+fn default_scale() -> f32 {
+    1.0
 }
 
 #[derive(Deserialize)]
@@ -50,11 +54,10 @@ pub fn load_config() -> CluxConfig {
     let config_path = config_dir.join("config.toml");
 
     if let Ok(content) = fs::read_to_string(config_path) {
-        // Log an error if parsing fails
         match toml::from_str(&content) {
             Ok(config) => config,
             Err(e) => {
-                eprintln!("Config parsing error: {}", e);
+                tracing::error!("Config parsing error: {}", e);
                 CluxConfig::default()
             }
         }

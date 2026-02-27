@@ -1,10 +1,9 @@
+mod backend;
 mod config;
 mod grabs;
 mod handlers;
 mod input;
 mod state;
-mod udev;
-mod winit;
 
 pub use state::Clux;
 
@@ -20,11 +19,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match arg.as_deref() {
         Some("--winit") => {
             tracing::info!("Starting clux with winit backend");
-            crate::winit::run_winit()?;
+            backend::run_winit()?;
         }
         Some("--tty-udev") => {
             tracing::info!("Starting clux on a tty using udev");
-            crate::udev::run_udev()?;
+            backend::run_udev()?;
         }
         _ => {
             println!("USAGE: clux --backend");

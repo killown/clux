@@ -49,7 +49,7 @@ impl Clux {
                                 let parts: Vec<&str> = binding.combo.split('+').collect();
 
                                 if let Some(key_part) = parts.last() {
-                                    let target_key = key_part.to_lowercase();
+                                    let target_key: String = key_part.to_lowercase();
 
                                     let is_key_match = keysym_name == target_key
                                         || (target_key == "return"
